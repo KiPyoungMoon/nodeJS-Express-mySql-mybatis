@@ -1,8 +1,9 @@
 import { getTransactionManager } from "../middlewares/transactionManager.js";
-import  mybatisMapper from "mybatis-mapper";
+import  MybatisMapper from "mybatis-mapper";
+
+MybatisMapper.createMapper(['./mapper/usersMapper.xml']);
 
 export const createUser = async (params) => {
-    console.log('usersDao.createUser');
     const txMgr = await getTransactionManager();
 
     const [ results, fields ] = await txMgr.doProcess( async(conn) => {
@@ -12,8 +13,8 @@ export const createUser = async (params) => {
          * 메소드 안의 익명함수 하나가 한개의 트랜젝션 처리가 된다.
          * 맘에 안들어...
          */
-         mybatisMapper.createMapper(['./mapper/usersMapper.xml']);
-         const sql = mybatisMapper.getStatement('usersMapper', 'insertUser', params, {language: 'sql', indent: ' '} );
+         
+         const sql = MybatisMapper.getStatement('usersMapper', 'insertUser', params, {language: 'sql', indent: ' '} );
         
         return await conn.query(sql);
     });
@@ -22,12 +23,10 @@ export const createUser = async (params) => {
 }
 
 export const deleteUser = async (params) => {
-    console.log('usersDao.deleteUser');
     const txMgr = await getTransactionManager();
     
     const [ results, fields ] = await txMgr.doProcess( async(conn) => {
-        mybatisMapper.createMapper(['./mapper/usersMapper.xml']);
-        const sql = mybatisMapper.getStatement('usersMapper', 'deleteUser', params, {language: 'sql', indent: ' '} );
+        const sql = MybatisMapper.getStatement('usersMapper', 'deleteUser', params, {language: 'sql', indent: ' '} );
         
         return await conn.query(sql);
     });
@@ -36,13 +35,23 @@ export const deleteUser = async (params) => {
 }
 
 export const getUsers = async() => {
-    console.log('usersDao.getUsers');
     const txMgr = await getTransactionManager();
 
     const [ results, fields ] = await txMgr.doProcess( async(conn) => {
-         mybatisMapper.createMapper(['./mapper/usersMapper.xml']);
-        const sql = mybatisMapper.getStatement('usersMapper', 'selectAllUsers', null, {language: 'sql', indent: ' '} );
+        const sql = MybatisMapper.getStatement('usersMapper', 'selectAllUsers', null, {language: 'sql', indent: ' '} );
         
+        return await conn.execute(sql);
+    });
+
+    return results;
+}
+
+export const getUser = async(params) => {
+    const txMgr = await getTransactionManager();
+
+    const [ results, fields ] = await txMgr.doProcess( async(conn) => {
+        const sql = MybatisMapper.getStatement('usersMapper', 'selectUser', params, {language: 'sql', indent: ' '} );
+
         return await conn.execute(sql);
     });
 

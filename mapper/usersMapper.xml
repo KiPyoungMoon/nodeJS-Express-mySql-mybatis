@@ -5,6 +5,10 @@
     SELECT * FROM USERS
   </select>
 
+  <select id="selectUser">
+    SELECT * FROM USERS WHERE ID = #{userId}
+  </select>
+
   <delete id="deleteUser">
     DELETE FROM USERS WHERE ID = #{userId}
   </delete>

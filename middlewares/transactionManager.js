@@ -23,7 +23,7 @@ class TransactionManager {
             try {
                 this.beginTransaction();
                 
-                [this.results, this.fields] = await todos(this.conn);
+                [this.results, this.fields] = await todos( this.conn );
 
                 this.commit();
 
@@ -32,7 +32,8 @@ class TransactionManager {
                 /**
                  * TODOS: error handling
                  */
-                console.log(error);
+                console.log(`transactionManager error: ${ error }`);
+                return error;
             } finally {
                 this.release();
             }
@@ -43,6 +44,6 @@ class TransactionManager {
 
 export const getTransactionManager = async() => {
     const conn = await connection();
-    console.log(`connection ThreadId: ${ conn.threadId }`);
+    // console.log(`connection ThreadId: ${ conn.threadId }`);
     return new TransactionManager(conn);
 }
