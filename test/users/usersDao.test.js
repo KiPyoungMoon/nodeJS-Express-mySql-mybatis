@@ -1,4 +1,3 @@
-import { getTransactionManager } from '../../middlewares/transactionManager.js';
 import { getUsers, createUser, deleteUser } from '../../models/usersDao.js';
 
 test('add users and get user and reset', async() => {
