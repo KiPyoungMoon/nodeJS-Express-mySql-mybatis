@@ -45,7 +45,6 @@ test('transaction test : 존재하지 않는 사용자 test를 insert하고 erro
 
         throw new Error("트랜젝션 테스트 강제 에러 발생");
     })
-    console.log(`returnError: ${returnError}`);
     let result2 = await getUser({userId: 'test'});
 
     expect(result2.length).toBe(0);

@@ -31,7 +31,7 @@ class TransactionManager {
         /**
                  * TODOS: error handling
                  */
-        console.log(`transactionManager error: ${error}`);
+        // console.log(`transactionManager error: ${error}`);
         return error;
       } finally {
         this.release();
