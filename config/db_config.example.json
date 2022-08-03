@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "user": "user",
+    "password": "your password",
+    "database": "your schema",
+    "connectionLimit": "10"
+}

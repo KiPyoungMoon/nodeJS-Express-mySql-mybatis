@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import { createWriteStream } from 'fs';
 
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.mjs';
@@ -14,7 +15,17 @@ const dirname = path.resolve();
 app.set('views', path.join(dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+// access log setting
+app.use(logger('combined', {
+  stream: createWriteStream('./log/access.log', { flags: 'a' })
+}));
+
+if (process.env.NODE_ENV === 'production') { 
+  app.use(logger('combined')); // production enveronment
+} else {
+  app.use(logger('dev')); // development enveronmet
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

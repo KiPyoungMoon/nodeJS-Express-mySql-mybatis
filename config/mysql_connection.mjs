@@ -11,6 +11,7 @@ import { readFile } from "fs/promises";
 /**
  * 여기서 풀을 factory 패턴으로? 싱글톤 적용해서?
  */
+// db_config.example.json 참조해서 db_config.json파일 생성할 것.
 const dbConfigFile = await readFile('./config/db_config.json');
 const db_config = JSON.parse(dbConfigFile);
 
