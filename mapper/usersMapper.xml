@@ -2,18 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="usersMapper">  
   <select id="selectAllUsers">
+    /* usersMapper.selectAllUsers */
     SELECT * FROM USERS
   </select>
 
   <select id="selectUser">
+    /* usersMapper.selectUser */
     SELECT * FROM USERS WHERE ID = #{userId}
   </select>
 
   <delete id="deleteUser">
+    /* usersMapper.deleteUser */
     DELETE FROM USERS WHERE ID = #{userId}
   </delete>
 
   <insert id="insertUser">
+    /* usersMapper.insertUser */
     INSERT INTO USERS 
         (id, password, email, name) 
     VALUES (

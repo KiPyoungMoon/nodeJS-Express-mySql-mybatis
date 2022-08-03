@@ -1,4 +1,4 @@
-import connection from "../config/mysql_connection.js";
+import connection from "../config/mysql_connection.mjs";
 
 class TransactionManager {
     constructor(conn) {

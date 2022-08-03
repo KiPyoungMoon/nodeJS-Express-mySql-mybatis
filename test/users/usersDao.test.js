@@ -1,6 +1,6 @@
-import { getUsers, createUser, deleteUser, getUser } from '../../models/usersDao.js';
+import { getUsers, insertUser, deleteUser, getUser } from '../../models/usersDao.mjs';
 import MybatisMapper from "mybatis-mapper";
-import { getTransactionManager } from "../../middlewares/transactionManager";
+import { getTransactionManager } from "../../middlewares/transactionManager.mjs";
 
 test('usersDao 사용자 조회, 등록, 삭제를 테스트한다.', async() => {
     
@@ -10,7 +10,7 @@ test('usersDao 사용자 조회, 등록, 삭제를 테스트한다.', async() =>
     expect(users.length).toBe(0);
 
     const params = { id: 'test', password: '1234', email: 'test@test.com', name: '테스터' };
-    await createUser(params);
+    await insertUser(params);
 
     const usersAfterCreate = await getUsers();
 

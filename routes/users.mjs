@@ -1,10 +1,9 @@
 import { Router } from 'express';
 const router = Router();
-import { getUsers, createUser } from '../controllers/usersController.js';
+import { getUsers, insertUser } from '../controllers/usersController.mjs';
 
 /* GET users listing. */
 router.get('/', async function(req, res, next) {
-  console.log('route.users get');
   try {
     var users = await getUsers();
     console.log(users);
@@ -17,7 +16,7 @@ router.get('/', async function(req, res, next) {
 
 router.post('/', async(req, res, next) => {
   try {
-    const result = await createUser(req.get('user'));
+    const result = await insertUser(req.get('user'));
 
     res.send(result);
   } catch (error) {
