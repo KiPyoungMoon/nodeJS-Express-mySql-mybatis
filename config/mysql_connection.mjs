@@ -1,5 +1,5 @@
-import { createPool } from "mysql2/promise.js";
-import { readFile } from "fs/promises";
+import { createPool } from 'mysql2/promise.js';
+import { readFile } from 'fs/promises';
 // import db_config from "./db_config.json" assert { type: 'json' };
 /**
  * 기술 종속성을 제거하기 위해 interface를 적용하고 싶은데,
@@ -12,20 +12,18 @@ import { readFile } from "fs/promises";
  * 여기서 풀을 factory 패턴으로? 싱글톤 적용해서?
  */
 // db_config.example.json 참조해서 db_config.json파일 생성할 것.
-const dbConfigFile = await readFile('./config/db_config.json');
-const db_config = JSON.parse(dbConfigFile);
+const dbConfigFile = await readFile('./config/dbConfig.json');
+const dbConfig = JSON.parse(dbConfigFile);
 
 const pool = createPool({
-    host: db_config.host,
-    user: db_config.user,
-    password: db_config.password,
-    database: db_config.database,
-    connectionLimit: db_config.connectionLimit,
-    
+  host: dbConfig.host,
+  user: dbConfig.user,
+  password: dbConfig.password,
+  database: dbConfig.database,
+  connectionLimit: dbConfig.connectionLimit,
+
 });
 
-const connection = async () => {
-    return await pool.getConnection(async conn => conn);
-}
+const connection = async () => await pool.getConnection(async (conn) => conn);
 
 export default connection;

@@ -1,49 +1,50 @@
-import connection from "../config/mysql_connection.mjs";
+import connection from '../config/mysql_connection.mjs';
 
 class TransactionManager {
-    constructor(conn) {
-        this.results,
-        this.fields,
-        this.conn = conn,
+  constructor(conn) {
+    this.results,
+    this.fields,
+    this.conn = conn,
 
-        this.beginTransaction = function () {
-            this.conn.beginTransaction();
-        },
-        this.commit = function () {
-            this.conn.commit();
-        },
-        this.rollback = function () {
-            this.conn.rollback();
-        },
-        this.release = function () {
-            this.conn.release();
-        },
+    this.beginTransaction = () => {
+      this.conn.beginTransaction();
+    },
+    this.commit = () => {
+      this.conn.commit();
+    },
+    this.rollback = () => {
+      this.conn.rollback();
+    },
+    this.release = () => {
+      this.conn.release();
+    },
 
-        this.doProcess = async function(todos) {
-            try {
-                this.beginTransaction();
-                
-                [this.results, this.fields] = await todos( this.conn );
+    this.doProcess = async (todos) => {
+      try {
+        this.beginTransaction();
 
-                this.commit();
+        [this.results, this.fields] = await todos(this.conn);
 
-            } catch (error) {
-                this.rollback();
-                /**
+        this.commit();
+      } catch (error) {
+        this.rollback();
+        /**
                  * TODOS: error handling
                  */
-                console.log(`transactionManager error: ${ error }`);
-                return error;
-            } finally {
-                this.release();
-            }
-            return [this.results, this.fields];
-        };
-    }
+        console.log(`transactionManager error: ${error}`);
+        return error;
+      } finally {
+        this.release();
+      }
+      return [this.results, this.fields];
+    };
+  }
 }
 
-export const getTransactionManager = async() => {
-    const conn = await connection();
-    // console.log(`connection ThreadId: ${ conn.threadId }`);
-    return new TransactionManager(conn);
-}
+const getTransactionManager = async () => {
+  const conn = await connection();
+  // console.log(`connection ThreadId: ${ conn.threadId }`);
+  return new TransactionManager(conn);
+};
+
+export default getTransactionManager;

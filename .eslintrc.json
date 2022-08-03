@@ -16,15 +16,9 @@
         "vue"
     ],
     "rules": {
-        "import/extensions": [
-            "off"
-        ],
-        "prefer-const": [
-            "off"
-        ],
-        "import/no-mutable-exports": [
-            "off"
-        ]
-        
+        "import/extensions": [ "off" ],
+        "prefer-const": [ "off" ],
+        "import/no-mutable-exports": [ "off" ],
+        "no-return-await": [ "off" ]
     }
 }

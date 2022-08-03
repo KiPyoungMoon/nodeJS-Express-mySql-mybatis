@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "user": "root",
+    "password": "ansrlvud1!",
+    "database": "web_common",
+    "connectionLimit": "10"
+}

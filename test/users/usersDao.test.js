@@ -1,6 +1,6 @@
 import { getUsers, insertUser, deleteUser, getUser } from '../../models/usersDao.mjs';
 import MybatisMapper from "mybatis-mapper";
-import { getTransactionManager } from "../../middlewares/transactionManager.mjs";
+import getTransactionManager from "../../middlewares/transactionManager.mjs";
 
 test('usersDao 사용자 조회, 등록, 삭제를 테스트한다.', async() => {
     
