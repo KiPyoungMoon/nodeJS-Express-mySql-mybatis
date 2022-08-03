@@ -4,7 +4,6 @@ import getTransactionManager from '../middlewares/transactionManager.mjs';
 MybatisMapper.createMapper(['./mapper/usersMapper.xml']);
 
 export const insertUser = async (params) => {
-//   const txMgr = await transactionManager();
   const txMgr = await getTransactionManager();
 
   const [results] = await txMgr.doProcess(async (conn) => {
@@ -38,7 +37,7 @@ export const deleteUser = async (params) => {
 };
 
 export const getUsers = async () => {
-  const txMgr = await getTransactionManager();
+const txMgr = await getTransactionManager();
 
   const [results] = await txMgr.doProcess(async (conn) => {
     const sql = MybatisMapper.getStatement('usersMapper', 'selectAllUsers', null, { language: 'sql', indent: ' ' });

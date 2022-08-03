@@ -15,11 +15,12 @@ const dirname = path.resolve();
 app.set('views', path.join(dirname, 'views'));
 app.set('view engine', 'pug');
 
-// access log setting
+// access log to txt
 app.use(logger('combined', {
   stream: createWriteStream('./log/access.log', { flags: 'a' })
 }));
 
+//set logger 
 if (process.env.NODE_ENV === 'production') { 
   app.use(logger('combined')); // production enveronment
 } else {
