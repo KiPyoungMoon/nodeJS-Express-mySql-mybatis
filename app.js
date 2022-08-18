@@ -2,8 +2,10 @@ import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-import { createWriteStream } from 'fs';
+import morgan from 'morgan';
+
+import * as rTracer from 'cls-rtracer';
+import { getHttpLogger } from './middlewares/winston.js';
 
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.mjs';
@@ -15,16 +17,19 @@ const dirname = path.resolve();
 app.set('views', path.join(dirname, 'views'));
 app.set('view engine', 'pug');
 
-// access log to txt
-app.use(logger('combined', {
-  stream: createWriteStream('./log/access.log', { flags: 'a' })
-}));
+// create request uuid for issue tracking - 1 uuid for 1 request
+app.use(rTracer.expressMiddleware());
 
-//set logger 
-if (process.env.NODE_ENV === 'production') { 
-  app.use(logger('combined')); // production enveronment
+//set logger
+/**
+ * TODOS: log test위해 dev일 때 log 찍도록 수정해둠. 완료 후 변경할 것
+ */
+if (process.env.NODE_ENV !== 'production') { 
+  app.use(morgan('combined', {
+    stream: getHttpLogger().stream
+  })); // production enveronment
 } else {
-  app.use(logger('dev')); // development enveronmet
+  app.use(morgan('dev')); // development enveronmet
 }
 
 app.use(express.json());

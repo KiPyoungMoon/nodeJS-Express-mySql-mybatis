@@ -21,10 +21,27 @@
     INSERT INTO USERS 
         (id, password, email, name) 
     VALUES (
-        #{id}, 
+        #{userId}, 
         #{password}, 
         #{email}, 
         #{name}
     )
   </insert>
+
+  <update id="updateUser">
+    /* usersMapper.updateUser */
+    UPDATE USERS
+    <set>
+      <if test="password != null">
+        password = #{password},
+      </if>
+      <if test="email != null">
+        email = #{email},
+      </if>
+      <if test="name != null">
+        name = #{name}
+      </if>
+    </set>
+    WHERE ID = #{userId}
+  </update>
 </mapper>

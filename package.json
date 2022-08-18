@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www --unhandled-rejections=strict",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit --detectOpenHandles",
     "dev": "nodemon -i test/**/*.test.js ./bin/www",
     "lint": "./node_modules/.bin/eslint ./**/*.mjs"
   },
   "dependencies": {
+    "cls-rtracer": "^2.6.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
@@ -17,7 +18,9 @@
     "morgan": "~1.9.1",
     "mybatis-mapper": "^0.6.8",
     "mysql2": "^2.3.3",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "winston": "^3.8.1",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "eslint": "^8.20.0",

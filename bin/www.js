@@ -8,6 +8,7 @@ import app from '../app.js';
 import Debug from 'debug';
 let debug = Debug("backend:server");
 import { createServer } from 'http';
+import { getHttpLogger } from '../middlewares/winston.js';
 
 /**
  * Get port from environment and store in Express.
@@ -24,7 +25,10 @@ let server = createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, () => {
+  const logger = getHttpLogger();
+  logger.info(`Server listening on port : ${port}`);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 

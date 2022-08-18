@@ -1,51 +1,86 @@
-import { getUsers, insertUser, deleteUser, getUser } from '../../models/usersDao.mjs';
+import { getUsers, insertUser, deleteUser, getUser, updateUser } from '../../models/usersDao.mjs';
+
 import MybatisMapper from "mybatis-mapper";
-import getTransactionManager from "../../middlewares/transactionManager.mjs";
+import TransactionManager from "../../middlewares/transactionManager.mjs";
 
-test('usersDao 사용자 조회, 등록, 삭제를 테스트한다.', async() => {
+describe(`dao Test`, () => {
+    test('usersDao 사용자 조회, 등록, 삭제를 테스트한다.', async() => {
     
-    await deleteUser({userId: 'test'});
-    const users = await getUser({userId: 'test'});
+        await deleteUser({ userId: 'test' });
+        let user = await getUser({ userId: 'test' });
+        
+        expect(user.length).toBe(0);
     
-    expect(users.length).toBe(0);
+        const params = { userId: 'test', password: '1234', email: 'test@test.com', name: '테스터' };
+        await insertUser(params);
+    
+        user = await getUsers();
+    
+        expect(user.length).toBe(1);
+        expect(user[0].id).toBe('test');
+    
+        await deleteUser({ userId: 'test' });
+    
+        user = await getUsers();
+        expect(user.length).toBe(0);
+    })
 
-    const params = { id: 'test', password: '1234', email: 'test@test.com', name: '테스터' };
-    await insertUser(params);
+    test('사용자 정보 수정을 테스트한다.', async () => {
+        await deleteUser({ userId: 'test' });
+    
+        let user = await getUser({ userId: 'test' });
+        expect(user.length).toBe(0);
+        
+        const params = { userId: 'test', password: '1234', email: 'test@test.com', name: '테스터' };
+        await insertUser(params);
+    
+        user = await getUser({ userId: 'test' });
+        
+        // console.log(Object.entries(user[0]));
+        
+        let updateUserInfos = { userId: 'test', password: null, email: null, name: '테스터_수정' };
+    
+        await updateUser(updateUserInfos);
+        user = await getUser({ userId: 'test' });
+        
+        // console.log(Object.entries(user[0]));
+        
+        expect(user[0].id).toBe('test');
+        expect(user[0].name).toBe('테스터_수정');
 
-    const usersAfterCreate = await getUsers();
+        updateUserInfos = { userId: 'test', password: 'test2', email: null, name: null };
+        
+        await updateUser(updateUserInfos);
+        user = await getUser({ userId: 'test' });
 
-    expect(usersAfterCreate.length).toBe(1);
-    expect(usersAfterCreate[0].id).toBe('test');
-
-    await deleteUser({ userId: 'test' });
-
-    const usersAfterDelete = await getUsers();
-    expect(usersAfterDelete.length).toBe(0);
+        expect(user[0].id).toBe('test');
+        expect(user[0].name).toBe('테스터_수정');
+        expect(user[0].password).toBe('test2');
+    })
 })
 
 test('transaction test : 존재하지 않는 사용자 test를 insert하고 error를 발생시킨 뒤 rollback을 확인한다.', async() => {
-    const txMgr = await getTransactionManager();
-
+    const txMgr = new TransactionManager();
+    
     await deleteUser({userId: 'test'});
-    let result = await getUser({userId: 'test'});
+    const user = await getUser({ userId: 'test' });
+    expect(user.length).toBe(0);
 
-    expect(result.length).toBe(0);
-
-    const returnError = await txMgr.doProcess( async(conn) => {
-        const params = { id: 'test', password: '1234', email: 'test@test.com', name: '테스터' };
+    await txMgr.doProcess( async(conn) => {
+        const params = { userId: 'test', password: '1234', email: 'test@test.com', name: '테스터' };
         
         const insertSql = MybatisMapper.getStatement('usersMapper', 'insertUser', params, {language: 'sql', indent: ' '} );
         await conn.query(insertSql);
 
         const selectSql = 'SELECT * FROM USERS WHERE ID = "test"';
-        const [usersAfterCreate, fields2] = await conn.query(selectSql);
+        let [user, fields2] = await conn.query(selectSql);
 
-        expect(usersAfterCreate.length).toBe(1);
-        expect(usersAfterCreate[0].id).toBe('test');
+        expect(user.length).toBe(1);
+        expect(user[0].id).toBe('test');
 
         throw new Error("트랜젝션 테스트 강제 에러 발생");
     })
-    let result2 = await getUser({userId: 'test'});
+    const result2 = await getUser({userId: 'test'});
 
     expect(result2.length).toBe(0);
 })

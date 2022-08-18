@@ -28,6 +28,6 @@ class ConnectionPool {
   }
 }
 const pool = new ConnectionPool().pool;
-const connection = async () => await pool.getConnection(async (conn) => conn);
+// const connection = async () => await pool.getConnection(async (conn) => conn);
 
-export default connection;
+export default pool;
